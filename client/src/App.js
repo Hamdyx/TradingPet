@@ -8,6 +8,8 @@ import CalculatorMA from './features/CalculatorMA/CalculatorMA';
 import MaTable from './features/movingAverage/MaTable';
 import WmaTable from './features/weightedMovingAverage/WmaTable';
 import BbTable from './features/bollingerBands/BbTable';
+import HighsTable from './features/highsAverage/HighsTable';
+import LowsTable from './features/lowsAverage/LowsTable';
 import './App.css';
 
 class App extends Component {
@@ -26,6 +28,16 @@ class App extends Component {
 							<Route exact path="/movingAverage" render={() => <MaTable />} />
 							<Route exact path="/weightedMovingAverage" render={() => <WmaTable />} />
 							<Route exact path="/bollingerBands" render={() => <BbTable />} />
+							<Route
+								exact
+								path="/highsAndLows"
+								render={() => (
+									<>
+										<HighsTable />
+										<LowsTable />
+									</>
+								)}
+							/>
 							<Redirect to="/" />
 						</Switch>
 					</section>

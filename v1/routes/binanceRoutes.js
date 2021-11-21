@@ -9,7 +9,10 @@ const {
 	getWeightedMaByInterval,
 	getBollingerBands,
 	getBollingerBandsByInterval,
-	getOHLC,
+	getAverageHighs,
+	getHighsByInterval,
+	getAverageLows,
+	getLowsByInterval,
 } = require('../controllers/binanceController');
 
 const router = express.Router();
@@ -25,6 +28,12 @@ router.route('/weightedMovingAverages/:interval').get(getWeightedMaByInterval);
 
 router.route('/bollingerBands').get(getBollingerBands);
 router.route('/bollingerBands/:interval').get(getBollingerBandsByInterval);
+
+router.route('/highs').get(getAverageHighs);
+router.route('/highs/:interval').get(getHighsByInterval);
+
+router.route('/lows').get(getAverageLows);
+router.route('/lows/:interval').get(getLowsByInterval);
 
 // router.route('/').get(getAllData).post(checkBody, createData);
 // router.route('/:id').get(getData).patch(updateData).delete(deleteTask);

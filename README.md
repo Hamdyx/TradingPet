@@ -1,13 +1,13 @@
 TradingPet App
 
-> > > using React, Redux, Node.js and Express.js to get and work with data from binance API
+> > using React, Redux, Node.js and Express.js to get and work with data from binance API
 
 current features:
 
 - Moving Averages (MA)
 - Weighted Moving Averages (WMA)
 - Bollinger Bands (BB)
-  > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+  > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 
 to-do features:
 

@@ -4,6 +4,8 @@ const axios = require('axios');
 const { setMA, getMA, getIntervalMA } = require('./maController');
 const { setWMA, getWMA, getIntervalWMA } = require('./wmaController');
 const { setBB, getBB, getIntervalBB } = require('./bbController');
+const { setHighs, getHighs, getIntervalHighs } = require('./highsController');
+const { setLows, getLows, getIntervalLows } = require('./lowsController');
 const { setCandleOHLC, getCandleOHLC } = require('./binanceDataController');
 
 const binanceEndpoint = 'https://api.binance.com';
@@ -102,6 +104,51 @@ exports.getBollingerBands = async (req, res) => {
 	});
 };
 // 1 bb e
+// 1 highs s
+// GET ('/highs')
+exports.getAverageHighs = async (req, res) => {
+	let averageHighs = await getHighs();
+	let candleOHLC = await getCandleOHLC();
+	if (averageHighs['1h'][20] === 0) {
+		if (candleOHLC['1h'].length === 0) {
+			candleOHLC = await setCandleOHLC();
+		}
+		averageHighs = await setHighs(candleOHLC);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageHighs,
+		},
+	});
+};
+// 1  highs e
+// 1 lows s
+// GET ('/lows')
+exports.getAverageLows = async (req, res) => {
+	let averageLows = await getLows();
+	let candleOHLC = await getCandleOHLC();
+	if (averageLows['1h'][20] === 0) {
+		if (candleOHLC['1h'].length === 0) {
+			candleOHLC = await setCandleOHLC();
+		}
+		averageLows = await setLows(candleOHLC);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageLows,
+		},
+	});
+};
+// 1  lows e
+
 // 2 MA s
 // GET ('/movingAverages/:interval')
 exports.movingAverageByInterval = async (req, res) => {
@@ -150,6 +197,38 @@ exports.getBollingerBandsByInterval = async (req, res) => {
 	});
 };
 // 2 bb e
+// 2 highs s
+// GET ('/averageHighs/:interval')
+exports.getHighsByInterval = async (req, res) => {
+	let interval = req.params.interval;
+	let averageHighs = await getIntervalHighs(interval);
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageHighs,
+		},
+	});
+};
+// 2 highs e
+// 2 lows s
+// GET ('/averageLows/:interval')
+exports.getLowsByInterval = async (req, res) => {
+	let interval = req.params.interval;
+	let averageLows = await getIntervalLows(interval);
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageLows,
+		},
+	});
+};
+// 2 lows e
 
 exports.checkId = (req, res, next, val) => {
 	// check the id of req.params.id

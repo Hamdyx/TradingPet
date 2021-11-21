@@ -25,6 +25,7 @@ export const Navbar = () => {
 				<Link to="/movingAverage">Moving Average</Link>
 				<Link to="/weightedMovingAverage">Weighted Moving Average</Link>
 				<Link to="/bollingerBands">Bollinger Bands</Link>
+				<Link to="/highsAndLows">Highs & Lows</Link>
 			</Nav>
 		</aside>
 	);

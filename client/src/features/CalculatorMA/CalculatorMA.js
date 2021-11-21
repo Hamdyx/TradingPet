@@ -4,6 +4,8 @@ import { Container, Table } from 'react-bootstrap';
 import MaTable from '../movingAverage/MaTable';
 import WmaTable from '../weightedMovingAverage/WmaTable';
 import BbTable from '../bollingerBands/BbTable';
+import HighsTable from '../highsAverage/HighsTable';
+import LowsTable from '../lowsAverage/LowsTable';
 // import WeightedMaTable from './WeightedMaTable';
 // import BollingerBands from './BollingerBands';
 
@@ -26,6 +28,8 @@ const CalculatorMA = () => {
 			<MaTable />
 			<WmaTable />
 			<BbTable />
+			<HighsTable />
+			<LowsTable />
 		</Container>
 	);
 };
