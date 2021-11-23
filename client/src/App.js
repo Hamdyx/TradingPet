@@ -10,6 +10,8 @@ import WmaTable from './features/weightedMovingAverage/WmaTable';
 import BbTable from './features/bollingerBands/BbTable';
 import HighsTable from './features/highsAverage/HighsTable';
 import LowsTable from './features/lowsAverage/LowsTable';
+import SupportTable from './features/supportAverage/SupportTable';
+import ResistanceTable from './features/resistanceAverage/ResistanceTable';
 import './App.css';
 
 class App extends Component {
@@ -25,9 +27,18 @@ class App extends Component {
 					<section className="main-content">
 						<Switch>
 							<Route exact path="/" render={() => <CalculatorMA />} />
-							<Route exact path="/movingAverage" render={() => <MaTable />} />
-							<Route exact path="/weightedMovingAverage" render={() => <WmaTable />} />
+							<Route
+								exact
+								path="/movingAverages"
+								render={() => (
+									<>
+										<MaTable />
+										<WmaTable />
+									</>
+								)}
+							/>
 							<Route exact path="/bollingerBands" render={() => <BbTable />} />
+
 							<Route
 								exact
 								path="/highsAndLows"
@@ -35,6 +46,16 @@ class App extends Component {
 									<>
 										<HighsTable />
 										<LowsTable />
+									</>
+								)}
+							/>
+							<Route
+								exact
+								path="/supportAndResistance"
+								render={() => (
+									<>
+										<SupportTable />
+										<ResistanceTable />
 									</>
 								)}
 							/>

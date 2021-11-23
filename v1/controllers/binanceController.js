@@ -6,6 +6,12 @@ const { setWMA, getWMA, getIntervalWMA } = require('./wmaController');
 const { setBB, getBB, getIntervalBB } = require('./bbController');
 const { setHighs, getHighs, getIntervalHighs } = require('./highsController');
 const { setLows, getLows, getIntervalLows } = require('./lowsController');
+const { setSupport, getSupport, getIntervalSupport } = require('./supportController');
+const {
+	setResistance,
+	getResistance,
+	getIntervalResistance,
+} = require('./resistanceController');
 const { setCandleOHLC, getCandleOHLC } = require('./binanceDataController');
 
 const binanceEndpoint = 'https://api.binance.com';
@@ -148,6 +154,50 @@ exports.getAverageLows = async (req, res) => {
 	});
 };
 // 1  lows e
+// 1 support s
+// GET ('/support')
+exports.getAverageSupport = async (req, res) => {
+	let averageSupport = await getSupport();
+	let candleOHLC = await getCandleOHLC();
+	if (averageSupport['1h'][20] === 0) {
+		if (candleOHLC['1h'].length === 0) {
+			candleOHLC = await setCandleOHLC();
+		}
+		averageSupport = await setSupport(candleOHLC);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageSupport,
+		},
+	});
+};
+// 1  support e
+// 1 resistance s
+// GET ('/resistance')
+exports.getAverageResistance = async (req, res) => {
+	let averageResistance = await getResistance();
+	let candleOHLC = await getCandleOHLC();
+	if (averageResistance['1h'][20] === 0) {
+		if (candleOHLC['1h'].length === 0) {
+			candleOHLC = await setCandleOHLC();
+		}
+		averageResistance = await setResistance(candleOHLC);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageResistance,
+		},
+	});
+};
+// 1  resistance e
 
 // 2 MA s
 // GET ('/movingAverages/:interval')
@@ -229,6 +279,38 @@ exports.getLowsByInterval = async (req, res) => {
 	});
 };
 // 2 lows e
+// 2 support s
+// GET ('/averageSupport/:interval')
+exports.getSupportByInterval = async (req, res) => {
+	let interval = req.params.interval;
+	let averageSupport = await getIntervalSupport(interval);
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageSupport,
+		},
+	});
+};
+// 2 support e
+// 2 resistance s
+// GET ('/averageResistance/:interval')
+exports.getResistanceByInterval = async (req, res) => {
+	let interval = req.params.interval;
+	let averageResistance = await getIntervalResistance(interval);
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			averageResistance,
+		},
+	});
+};
+// 2 support e
 
 exports.checkId = (req, res, next, val) => {
 	// check the id of req.params.id

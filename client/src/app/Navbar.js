@@ -22,10 +22,10 @@ export const Navbar = () => {
 		<aside className="side-navbar">
 			<Nav defaultActiveKey="/" className="flex-row nav-section">
 				<Link to="/">Dashboard</Link>
-				<Link to="/movingAverage">Moving Average</Link>
-				<Link to="/weightedMovingAverage">Weighted Moving Average</Link>
+				<Link to="/movingAverages">Moving Averages</Link>
 				<Link to="/bollingerBands">Bollinger Bands</Link>
 				<Link to="/highsAndLows">Highs & Lows</Link>
+				<Link to="/supportAndResistance">Support & Resistance</Link>
 			</Nav>
 		</aside>
 	);

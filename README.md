@@ -7,12 +7,14 @@ current features:
 - Moving Averages (MA)
 - Weighted Moving Averages (WMA)
 - Bollinger Bands (BB)
+- Average Highs & Lows
+- Average Support & Resistance (50% logic)
   > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 
 to-do features:
 
-- Support & Resistence
 - On-Balance Volume (OBV)
 - Exponential Moving Averages (EMA)
 - Relative Strength Index (RSI)
 - Moving Average Convergence Divergence (MACD)
+- Order Book

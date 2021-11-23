@@ -131,6 +131,7 @@ dist
 dev-data/
 config.env
 
+myNotes.txt
 
 
 npm-debug.log*

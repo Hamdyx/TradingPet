@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchWmA, selectAllWMA, selectWmaIds, selectWmaById } from './wmaSlice';
+import {
+	fetchResistance,
+	selectAllResistance,
+	selectResistanceIds,
+	selectResistanceById,
+} from './resistanceSlice';
 
 const axios = require('axios');
 
 const myApi = 'http://127.0.0.1:5000/api/v1/binance';
 
-const WmaTable = () => {
+const ResistanceTable = () => {
 	const dispatch = useDispatch();
-	const wmaIds = useSelector(selectWmaIds);
-	const allWma = useSelector(selectAllWMA);
-	const wmaStatus = useSelector((state) => state.wma.status);
+	const resistanceIds = useSelector(selectResistanceIds);
+	const allResistance = useSelector(selectAllResistance);
+	const resistanceStatus = useSelector((state) => state.resistance.status);
 
 	useEffect(() => {
 		const fetchData = async () => {
-			let res = await dispatch(fetchWmA());
+			let res = await dispatch(fetchResistance());
 			return res;
 		};
 		fetchData();
@@ -28,7 +33,7 @@ const WmaTable = () => {
 		<Table striped bordered hover>
 			<thead>
 				<tr>
-					<th>WMA</th>
+					<th>Resistance</th>
 					<th>20</th>
 					<th>50</th>
 					<th>100</th>
@@ -45,7 +50,8 @@ const WmaTable = () => {
 };
 
 const IntervalRow = ({ interval }) => {
-	const wma = useSelector((state) => selectWmaById(state, interval));
+	const dispatch = useDispatch();
+	const resistance = useSelector((state) => selectResistanceById(state, interval));
 
 	let content = (
 		<>
@@ -53,10 +59,8 @@ const IntervalRow = ({ interval }) => {
 		</>
 	);
 
-	if (wma) {
-		let data = wma.data;
-		// console.log('wma data');
-		// console.log(data);
+	if (resistance) {
+		let data = resistance.data;
 		if (
 			data[20] !== null ||
 			data[50] !== null ||
@@ -80,9 +84,9 @@ const IntervalRow = ({ interval }) => {
 };
 
 const AverageRow = () => {
-	const allWma = useSelector(selectAllWMA);
+	const allResistance = useSelector(selectAllResistance);
 
-	let sumWMA = {
+	let sumResistance = {
 		20: 0,
 		50: 0,
 		100: 0,
@@ -95,30 +99,32 @@ const AverageRow = () => {
 		</>
 	);
 
-	if (allWma.length !== 0) {
-		for (let i = 0; i < allWma.length; i++) {
-			for (const [p, v] of Object.entries(allWma[i].data)) {
-				sumWMA[p] += v;
+	if (allResistance.length !== 0) {
+		for (let i = 0; i < allResistance.length; i++) {
+			for (const [p, v] of Object.entries(allResistance[i].data)) {
+				sumResistance[p] += v;
 			}
 		}
 		content = (
 			<>
 				<td>AVG</td>
-				<td>{(sumWMA[20] / 8).toFixed(2)}</td>
-				<td>{(sumWMA[50] / 8).toFixed(2)}</td>
-				<td>{(sumWMA[100] / 8).toFixed(2)}</td>
-				<td>{(sumWMA[200] / 8).toFixed(2)}</td>
+				<td>{(sumResistance[20] / 8).toFixed(2)}</td>
+				<td>{(sumResistance[50] / 8).toFixed(2)}</td>
+				<td>{(sumResistance[100] / 8).toFixed(2)}</td>
+				<td>{(sumResistance[200] / 8).toFixed(2)}</td>
 				<td>
 					{(
-						(sumWMA[20] / 8 + sumWMA[50] / 8 + sumWMA[100] / 8 + sumWMA[200] / 8) /
+						(sumResistance[20] / 8 +
+							sumResistance[50] / 8 +
+							sumResistance[100] / 8 +
+							sumResistance[200] / 8) /
 						4
 					).toFixed(2)}
 				</td>
 			</>
 		);
 	}
-
 	return <tr>{content}</tr>;
 };
 
-export default WmaTable;
+export default ResistanceTable;

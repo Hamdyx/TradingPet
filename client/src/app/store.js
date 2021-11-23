@@ -5,6 +5,8 @@ import wmaReducer from '../features/weightedMovingAverage/wmaSlice';
 import bbReducer from '../features/bollingerBands/bbSlice';
 import highsReducer from '../features/highsAverage/highsSlice';
 import lowsReducer from '../features/lowsAverage/lowsSlice';
+import supportReducer from '../features/supportAverage/supportSlice';
+import resistanceReducer from '../features/resistanceAverage/resistanceSlice';
 
 /* import { applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension'; */
@@ -17,6 +19,8 @@ export const store = configureStore(
 			bb: bbReducer,
 			highs: highsReducer,
 			lows: lowsReducer,
+			support: supportReducer,
+			resistance: resistanceReducer,
 		},
 	},
 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

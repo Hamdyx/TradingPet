@@ -13,6 +13,10 @@ const {
 	getHighsByInterval,
 	getAverageLows,
 	getLowsByInterval,
+	getAverageSupport,
+	getSupportByInterval,
+	getAverageResistance,
+	getResistanceByInterval,
 } = require('../controllers/binanceController');
 
 const router = express.Router();
@@ -34,6 +38,12 @@ router.route('/highs/:interval').get(getHighsByInterval);
 
 router.route('/lows').get(getAverageLows);
 router.route('/lows/:interval').get(getLowsByInterval);
+
+router.route('/support').get(getAverageSupport);
+router.route('/support/:interval').get(getSupportByInterval);
+
+router.route('/resistance').get(getAverageResistance);
+router.route('/resistance/:interval').get(getResistanceByInterval);
 
 // router.route('/').get(getAllData).post(checkBody, createData);
 // router.route('/:id').get(getData).patch(updateData).delete(deleteTask);
