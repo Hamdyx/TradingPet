@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMA, selectAllMA, selectMaIds, selectMaById } from './maSlice';
-
+import IntervalRow from '../IntervalRow';
 const axios = require('axios');
 
 const myApi = 'http://127.0.0.1:5000/api/v1/binance';
@@ -22,7 +22,9 @@ const MaTable = () => {
 	}, [dispatch]);
 
 	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
-	const content = intervals.map((el) => <IntervalRow key={el} interval={el} />);
+	const content = intervals.map((el) => (
+		<IntervalRow key={el} interval={el} selector={selectMaById} />
+	));
 
 	return (
 		<Table striped bordered hover>
@@ -44,40 +46,6 @@ const MaTable = () => {
 	);
 };
 
-const IntervalRow = ({ interval }) => {
-	const dispatch = useDispatch();
-	const ma = useSelector((state) => selectMaById(state, interval));
-
-	let content = (
-		<>
-			<td colSpan="6">Loading...</td>
-		</>
-	);
-
-	if (ma) {
-		let data = ma.data;
-		if (
-			data[20] !== null ||
-			data[50] !== null ||
-			data[100] !== null ||
-			data[200] !== null
-		) {
-			content = (
-				<>
-					<td>{interval}</td>
-					<td>{data[20].toFixed(2)}</td>
-					<td>{data[50].toFixed(2)}</td>
-					<td>{data[100].toFixed(2)}</td>
-					<td>{data[200].toFixed(2)}</td>
-					<td>{((data[20] + data[50] + data[100] + data[200]) / 4).toFixed(2)}</td>
-				</>
-			);
-		}
-	}
-
-	return <tr>{content}</tr>;
-};
-
 const AverageRow = () => {
 	const allMa = useSelector(selectAllMA);
 
@@ -96,7 +64,7 @@ const AverageRow = () => {
 
 	if (allMa.length !== 0) {
 		for (let i = 0; i < allMa.length; i++) {
-			for (const [p, v] of Object.entries(allMa[i].data)) {
+			for (const [p, v] of Object.entries(allMa[i])) {
 				sumMA[p] += v;
 			}
 		}

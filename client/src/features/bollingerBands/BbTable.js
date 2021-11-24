@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBB, selectAllBB, selectBbIds, selectBbById } from './bbSlice';
+import IntervalRow from '../IntervalRow';
 
 const axios = require('axios');
 
@@ -22,7 +23,9 @@ const BbTable = () => {
 	}, [dispatch]);
 
 	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
-	const content = intervals.map((el) => <IntervalRow key={el} interval={el} />);
+	const content = intervals.map((el) => (
+		<IntervalRow key={el} interval={el} selector={selectBbById} />
+	));
 
 	return (
 		<Table striped bordered hover>
@@ -44,35 +47,6 @@ const BbTable = () => {
 	);
 };
 
-const IntervalRow = ({ interval }) => {
-	const dispatch = useDispatch();
-	const bb = useSelector((state) => selectBbById(state, interval));
-
-	let content = (
-		<>
-			<td colSpan="5">Loading...</td>
-		</>
-	);
-
-	if (bb) {
-		let data = bb.data;
-		if (data['upper'] !== null && data['middle'] !== null && data['lower'] !== null) {
-			content = (
-				<>
-					<td>{interval}</td>
-					<td>{data['upper'].toFixed(2)}</td>
-					<td>{data['middle'].toFixed(2)}</td>
-					<td>{data['lower'].toFixed(2)}</td>
-
-					<td>{((data['upper'] + data['middle'] + data['lower']) / 3).toFixed(2)}</td>
-				</>
-			);
-		}
-	}
-
-	return <tr>{content}</tr>;
-};
-
 const AverageRow = () => {
 	const allBb = useSelector(selectAllBB);
 
@@ -90,7 +64,7 @@ const AverageRow = () => {
 
 	if (allBb.length !== 0) {
 		for (let i = 0; i < allBb.length; i++) {
-			for (const [p, v] of Object.entries(allBb[i].data)) {
+			for (const [p, v] of Object.entries(allBb[i])) {
 				sumBB[p] += v;
 			}
 		}

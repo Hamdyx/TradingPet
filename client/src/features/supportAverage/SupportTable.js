@@ -7,6 +7,7 @@ import {
 	selectSupportIds,
 	selectSupportById,
 } from './supportSlice';
+import IntervalRow from '../IntervalRow';
 
 const axios = require('axios');
 
@@ -27,7 +28,9 @@ const SupportTable = () => {
 	}, [dispatch]);
 
 	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
-	const content = intervals.map((el) => <IntervalRow key={el} interval={el} />);
+	const content = intervals.map((el) => (
+		<IntervalRow key={el} interval={el} selector={selectSupportById} />
+	));
 
 	return (
 		<Table striped bordered hover>
@@ -49,40 +52,6 @@ const SupportTable = () => {
 	);
 };
 
-const IntervalRow = ({ interval }) => {
-	const dispatch = useDispatch();
-	const support = useSelector((state) => selectSupportById(state, interval));
-
-	let content = (
-		<>
-			<td colSpan="6">Loading...</td>
-		</>
-	);
-
-	if (support) {
-		let data = support.data;
-		if (
-			data[20] !== null ||
-			data[50] !== null ||
-			data[100] !== null ||
-			data[200] !== null
-		) {
-			content = (
-				<>
-					<td>{interval}</td>
-					<td>{data[20].toFixed(2)}</td>
-					<td>{data[50].toFixed(2)}</td>
-					<td>{data[100].toFixed(2)}</td>
-					<td>{data[200].toFixed(2)}</td>
-					<td>{((data[20] + data[50] + data[100] + data[200]) / 4).toFixed(2)}</td>
-				</>
-			);
-		}
-	}
-
-	return <tr>{content}</tr>;
-};
-
 const AverageRow = () => {
 	const allSupport = useSelector(selectAllSupport);
 
@@ -101,7 +70,7 @@ const AverageRow = () => {
 
 	if (allSupport.length !== 0) {
 		for (let i = 0; i < allSupport.length; i++) {
-			for (const [p, v] of Object.entries(allSupport[i].data)) {
+			for (const [p, v] of Object.entries(allSupport[i])) {
 				sumSupport[p] += v;
 			}
 		}

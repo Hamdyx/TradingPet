@@ -7,7 +7,7 @@ import {
 	selectResistanceIds,
 	selectResistanceById,
 } from './resistanceSlice';
-
+import IntervalRow from '../IntervalRow';
 const axios = require('axios');
 
 const myApi = 'http://127.0.0.1:5000/api/v1/binance';
@@ -27,7 +27,9 @@ const ResistanceTable = () => {
 	}, [dispatch]);
 
 	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
-	const content = intervals.map((el) => <IntervalRow key={el} interval={el} />);
+	const content = intervals.map((el) => (
+		<IntervalRow key={el} interval={el} selector={selectResistanceById} />
+	));
 
 	return (
 		<Table striped bordered hover>
@@ -49,40 +51,6 @@ const ResistanceTable = () => {
 	);
 };
 
-const IntervalRow = ({ interval }) => {
-	const dispatch = useDispatch();
-	const resistance = useSelector((state) => selectResistanceById(state, interval));
-
-	let content = (
-		<>
-			<td colSpan="6">Loading...</td>
-		</>
-	);
-
-	if (resistance) {
-		let data = resistance.data;
-		if (
-			data[20] !== null ||
-			data[50] !== null ||
-			data[100] !== null ||
-			data[200] !== null
-		) {
-			content = (
-				<>
-					<td>{interval}</td>
-					<td>{data[20].toFixed(2)}</td>
-					<td>{data[50].toFixed(2)}</td>
-					<td>{data[100].toFixed(2)}</td>
-					<td>{data[200].toFixed(2)}</td>
-					<td>{((data[20] + data[50] + data[100] + data[200]) / 4).toFixed(2)}</td>
-				</>
-			);
-		}
-	}
-
-	return <tr>{content}</tr>;
-};
-
 const AverageRow = () => {
 	const allResistance = useSelector(selectAllResistance);
 
@@ -101,7 +69,7 @@ const AverageRow = () => {
 
 	if (allResistance.length !== 0) {
 		for (let i = 0; i < allResistance.length; i++) {
-			for (const [p, v] of Object.entries(allResistance[i].data)) {
+			for (const [p, v] of Object.entries(allResistance[i])) {
 				sumResistance[p] += v;
 			}
 		}
