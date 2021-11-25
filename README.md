@@ -9,6 +9,7 @@ current features:
 - Bollinger Bands (BB)
 - Average Highs & Lows
 - Average Support & Resistance (50% logic)
+- Buy & Sell Points (15% logic)
   > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 
 to-do features:

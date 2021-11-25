@@ -21,7 +21,7 @@ const BuyPoints = () => {
 		fetchData();
 	}, [dispatch]);
 
-	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
+	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w', 'avg'];
 	const content = intervals.map((el) => (
 		<IntervalRow key={el} interval={el} selector={selectById} />
 	));

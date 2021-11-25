@@ -27,7 +27,7 @@ const CalculatorMA = () => {
 		<Container className="CalculatorMA">
 			<MaTable />
 			<WmaTable />
-			<BbTable />
+			{/* <BbTable /> */}
 			<HighsTable />
 			<LowsTable />
 		</Container>

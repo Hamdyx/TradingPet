@@ -1,4 +1,5 @@
 const setMA = require('./maController').setMA;
+const getIntervalCandleOHLC = require('./binanceDataController').getIntervalCandleOHLC;
 
 const bollingerBands = {
 	'1h': { upper: 0, middle: 0, lower: 0 },
@@ -19,7 +20,7 @@ const calculateBollingerBands = async (interval, candleOHLC, movingAverages) => 
 	let ma20 = _movingAverages[interval][20];
 
 	const calculateStdDev = async (interval) => {
-		let _intervalOHLC = candleOHLC[interval];
+		let _intervalOHLC = await getIntervalCandleOHLC(interval);
 		let split20 = Array.from(_intervalOHLC.slice(0, 20));
 		let _k = 0;
 		let n = 0;
@@ -52,21 +53,46 @@ const calculateBollingerBands = async (interval, candleOHLC, movingAverages) => 
 
 	let stdDev = await calculateStdDev(interval);
 
-	return {
+	const calcAvg = ({ upper, middle, lower }) => {
+		return (upper + middle + lower) / 3;
+	};
+
+	let bb = {
 		upper: ma20 + stdDev * 2,
 		middle: ma20,
 		lower: ma20 - stdDev * 2,
 	};
+	bb['avg'] = calcAvg(bb);
+
+	return bb;
 };
 
 exports.setBB = async (candleOHLC, movingAverages) => {
+	let sumBands = { upper: 0, middle: 0, lower: 0, avg: 0 };
 	let _movingAverages = movingAverages;
 	if (_movingAverages['1h'][20] === 0) {
 		_movingAverages = await setMA(candleOHLC);
 	}
 	for (const [k, v] of Object.entries(_movingAverages)) {
-		bollingerBands[k] = await calculateBollingerBands(k, candleOHLC, _movingAverages);
+		if (k !== 'avg') {
+			bollingerBands[k] = await calculateBollingerBands(k, candleOHLC, _movingAverages);
+		}
 	}
+
+	const calcTotalAvg = (band) => {
+		let sum = 0;
+		for (const [k, v] of Object.entries(bollingerBands)) {
+			sum += bollingerBands[k][band];
+		}
+		return sum / 8;
+	};
+
+	bollingerBands['avg'] = {
+		upper: calcTotalAvg('upper'),
+		middle: calcTotalAvg('middle'),
+		lower: calcTotalAvg('lower'),
+		avg: calcTotalAvg('avg'),
+	};
 
 	return bollingerBands;
 };

@@ -35,13 +35,31 @@ const calculateBuyPoints = (intervalOHLC, period, ma) => {
 };
 
 exports.setBuyPoints = async (candleOHLC) => {
+	let sumPeriods = { 20: 0, 50: 0, 100: 0, 200: 0, avg: 0 };
 	let ma = 0;
 	for (const [k, v] of Object.entries(candleOHLC)) {
+		let sumBuy = 0;
 		ma = await getIntervalMA(k);
 		for (const [p, pv] of Object.entries(buyPoints[k])) {
 			buyPoints[k][p] = calculateBuyPoints(candleOHLC[k], p, ma[p]);
+			sumPeriods[p] += buyPoints[k][p];
+			sumBuy += buyPoints[k][p];
 		}
+		buyPoints[k]['avg'] = sumBuy / 4;
 	}
+
+	buyPoints['avg'] = {
+		20: sumPeriods[20] / 8,
+		50: sumPeriods[50] / 8,
+		100: sumPeriods[100] / 8,
+		200: sumPeriods[200] / 8,
+		avg:
+			(sumPeriods[20] / 8 +
+				sumPeriods[50] / 8 +
+				sumPeriods[100] / 8 +
+				sumPeriods[200] / 8) /
+			4,
+	};
 
 	return buyPoints;
 };

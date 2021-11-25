@@ -8,10 +8,7 @@ import {
 	selectSupportById,
 } from './supportSlice';
 import IntervalRow from '../IntervalRow';
-
-const axios = require('axios');
-
-const myApi = 'http://127.0.0.1:5000/api/v1/binance';
+import AverageRow from '../AverageRow';
 
 const SupportTable = () => {
 	const dispatch = useDispatch();
@@ -27,7 +24,7 @@ const SupportTable = () => {
 		fetchData();
 	}, [dispatch]);
 
-	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
+	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w', 'avg'];
 	const content = intervals.map((el) => (
 		<IntervalRow key={el} interval={el} selector={selectSupportById} />
 	));
@@ -46,54 +43,10 @@ const SupportTable = () => {
 			</thead>
 			<tbody>
 				{content}
-				<AverageRow />
+				{/* <AverageRow selector={selectAllSupport} /> */}
 			</tbody>
 		</Table>
 	);
-};
-
-const AverageRow = () => {
-	const allSupport = useSelector(selectAllSupport);
-
-	let sumSupport = {
-		20: 0,
-		50: 0,
-		100: 0,
-		200: 0,
-	};
-
-	let content = (
-		<>
-			<td colSpan="6">Loading...</td>
-		</>
-	);
-
-	if (allSupport.length !== 0) {
-		for (let i = 0; i < allSupport.length; i++) {
-			for (const [p, v] of Object.entries(allSupport[i])) {
-				sumSupport[p] += v;
-			}
-		}
-		content = (
-			<>
-				<td>AVG</td>
-				<td>{(sumSupport[20] / 8).toFixed(2)}</td>
-				<td>{(sumSupport[50] / 8).toFixed(2)}</td>
-				<td>{(sumSupport[100] / 8).toFixed(2)}</td>
-				<td>{(sumSupport[200] / 8).toFixed(2)}</td>
-				<td>
-					{(
-						(sumSupport[20] / 8 +
-							sumSupport[50] / 8 +
-							sumSupport[100] / 8 +
-							sumSupport[200] / 8) /
-						4
-					).toFixed(2)}
-				</td>
-			</>
-		);
-	}
-	return <tr>{content}</tr>;
 };
 
 export default SupportTable;

@@ -25,12 +25,33 @@ const calculateWeightedMa = async (intervalOHLC, period) => {
 	return sumWma / sumWeight;
 };
 
+const calculateAverages = () => {
+	return sum / 8;
+};
+
 exports.setWMA = async (candleOHLC) => {
+	let sumPeriods = { 20: 0, 50: 0, 100: 0, 200: 0, avg: 0 };
 	for (const [k, v] of Object.entries(candleOHLC)) {
+		let sumWma = 0;
 		for (const [p, pv] of Object.entries(weightedMa[k])) {
 			weightedMa[k][p] = await calculateWeightedMa(candleOHLC[k], p);
+			sumPeriods[p] += weightedMa[k][p];
+			sumWma += weightedMa[k][p];
 		}
+		weightedMa[k]['avg'] = sumWma / 4;
 	}
+	weightedMa['avg'] = {
+		20: sumPeriods[20] / 8,
+		50: sumPeriods[50] / 8,
+		100: sumPeriods[100] / 8,
+		200: sumPeriods[200] / 8,
+		avg:
+			(sumPeriods[20] / 8 +
+				sumPeriods[50] / 8 +
+				sumPeriods[100] / 8 +
+				sumPeriods[200] / 8) /
+			4,
+	};
 
 	return weightedMa;
 };

@@ -13,7 +13,7 @@ const IntervalRow = ({ interval, selector }) => {
 		let data = Object.entries(item);
 		let isValid = false;
 		for (const [k, v] of data) {
-			isValid = !!v;
+			isValid = v >= 0 ? true : false;
 		}
 		if (isValid) {
 			data = data.filter((el) => !isNaN(el[1]));
@@ -29,7 +29,7 @@ const IntervalRow = ({ interval, selector }) => {
 					<td>{interval}</td>
 					{data}
 
-					<td>{(sum / length).toFixed(2)}</td>
+					{/* <td>{(sum / length).toFixed(2)}</td> */}
 				</>
 			);
 		}

@@ -24,11 +24,29 @@ const calculateSupport = (intervalOHLC, period) => {
 };
 
 exports.setSupport = async (candleOHLC) => {
+	let sumPeriods = { 20: 0, 50: 0, 100: 0, 200: 0, avg: 0 };
 	for (const [k, v] of Object.entries(candleOHLC)) {
+		let sumSupp = 0;
 		for (const [p, pv] of Object.entries(support[k])) {
 			support[k][p] = calculateSupport(candleOHLC[k], p);
+			sumPeriods[p] += support[k][p];
+			sumSupp += support[k][p];
 		}
+		support[k]['avg'] = sumSupp / 4;
 	}
+
+	support['avg'] = {
+		20: sumPeriods[20] / 8,
+		50: sumPeriods[50] / 8,
+		100: sumPeriods[100] / 8,
+		200: sumPeriods[200] / 8,
+		avg:
+			(sumPeriods[20] / 8 +
+				sumPeriods[50] / 8 +
+				sumPeriods[100] / 8 +
+				sumPeriods[200] / 8) /
+			4,
+	};
 
 	return support;
 };

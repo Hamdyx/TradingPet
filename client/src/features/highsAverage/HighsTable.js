@@ -3,9 +3,7 @@ import { Container, Table } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchHighs, selectAllHighs, selectHighsIds, selectHighById } from './highsSlice';
 import IntervalRow from '../IntervalRow';
-const axios = require('axios');
-
-const myApi = 'http://127.0.0.1:5000/api/v1/binance';
+import AverageRow from '../AverageRow';
 
 const HighsTable = () => {
 	const dispatch = useDispatch();
@@ -21,7 +19,7 @@ const HighsTable = () => {
 		fetchData();
 	}, [dispatch]);
 
-	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w'];
+	const intervals = ['1h', '2h', '4h', '6h', '8h', '12h', '1d', '1w', 'avg'];
 	const content = intervals.map((el) => (
 		<IntervalRow key={el} interval={el} selector={selectHighById} />
 	));
@@ -40,54 +38,10 @@ const HighsTable = () => {
 			</thead>
 			<tbody>
 				{content}
-				<AverageRow />
+				{/* <AverageRow selector={selectAllHighs} /> */}
 			</tbody>
 		</Table>
 	);
-};
-
-const AverageRow = () => {
-	const allHighs = useSelector(selectAllHighs);
-
-	let sumHighs = {
-		20: 0,
-		50: 0,
-		100: 0,
-		200: 0,
-	};
-
-	let content = (
-		<>
-			<td colSpan="6">Loading...</td>
-		</>
-	);
-
-	if (allHighs.length !== 0) {
-		for (let i = 0; i < allHighs.length; i++) {
-			for (const [p, v] of Object.entries(allHighs[i])) {
-				sumHighs[p] += v;
-			}
-		}
-		content = (
-			<>
-				<td>AVG</td>
-				<td>{(sumHighs[20] / 8).toFixed(2)}</td>
-				<td>{(sumHighs[50] / 8).toFixed(2)}</td>
-				<td>{(sumHighs[100] / 8).toFixed(2)}</td>
-				<td>{(sumHighs[200] / 8).toFixed(2)}</td>
-				<td>
-					{(
-						(sumHighs[20] / 8 +
-							sumHighs[50] / 8 +
-							sumHighs[100] / 8 +
-							sumHighs[200] / 8) /
-						4
-					).toFixed(2)}
-				</td>
-			</>
-		);
-	}
-	return <tr>{content}</tr>;
 };
 
 export default HighsTable;

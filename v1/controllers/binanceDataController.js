@@ -49,8 +49,13 @@ exports.setCandleOHLC = async () => {
 	}
 	return candleOHLC;
 };
+
 exports.getCandleOHLC = async () => {
 	return candleOHLC;
+};
+
+exports.getIntervalCandleOHLC = async (interval) => {
+	return candleOHLC[interval];
 };
 
 /* exports.getAllData = async (req, res) => {
