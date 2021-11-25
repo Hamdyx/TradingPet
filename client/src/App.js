@@ -12,6 +12,8 @@ import HighsTable from './features/highsAverage/HighsTable';
 import LowsTable from './features/lowsAverage/LowsTable';
 import SupportTable from './features/supportAverage/SupportTable';
 import ResistanceTable from './features/resistanceAverage/ResistanceTable';
+import BuyPoints from './features/buyPoints/BuyPoints';
+import SellPoints from './features/sellPoints/SellPoints';
 import './App.css';
 
 class App extends Component {
@@ -56,6 +58,16 @@ class App extends Component {
 									<>
 										<SupportTable />
 										<ResistanceTable />
+									</>
+								)}
+							/>
+							<Route
+								exact
+								path="/buyAndSellPoints"
+								render={() => (
+									<>
+										<BuyPoints />
+										<SellPoints />
 									</>
 								)}
 							/>

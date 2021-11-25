@@ -17,6 +17,10 @@ const {
 	getSupportByInterval,
 	getAverageResistance,
 	getResistanceByInterval,
+	getAverageBuyPoints,
+	getBuyPointsByInterval,
+	getAverageSellPoints,
+	getSellPointsByInterval,
 } = require('../controllers/binanceController');
 
 const router = express.Router();
@@ -44,6 +48,12 @@ router.route('/support/:interval').get(getSupportByInterval);
 
 router.route('/resistance').get(getAverageResistance);
 router.route('/resistance/:interval').get(getResistanceByInterval);
+
+router.route('/buyPoints').get(getAverageBuyPoints);
+router.route('/buyPoints/:interval').get(getBuyPointsByInterval);
+
+router.route('/sellPoints').get(getAverageSellPoints);
+router.route('/sellPoints/:interval').get(getSellPointsByInterval);
 
 // router.route('/').get(getAllData).post(checkBody, createData);
 // router.route('/:id').get(getData).patch(updateData).delete(deleteTask);

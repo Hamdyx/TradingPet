@@ -12,6 +12,16 @@ const {
 	getResistance,
 	getIntervalResistance,
 } = require('./resistanceController');
+const {
+	setBuyPoints,
+	getBuyPoints,
+	getIntervalBuyPoints,
+} = require('./buyPointsController');
+const {
+	setSellPoints,
+	getSellPoints,
+	getIntervalSellPoints,
+} = require('./sellPointsController');
 const { setCandleOHLC, getCandleOHLC } = require('./binanceDataController');
 
 const binanceEndpoint = 'https://api.binance.com';
@@ -198,6 +208,50 @@ exports.getAverageResistance = async (req, res) => {
 	});
 };
 // 1  resistance e
+// 1 buyPoints s
+// GET ('/buyPoints')
+exports.getAverageBuyPoints = async (req, res) => {
+	let buyPoints = await getBuyPoints();
+	if (buyPoints['1h'][20] === 0) {
+		let candleOHLC = await getCandleOHLC();
+		if (candleOHLC['1h'].length === 0) {
+			candleOHLC = await setCandleOHLC();
+		}
+		buyPoints = await setBuyPoints(candleOHLC);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			buyPoints,
+		},
+	});
+};
+// 1  buyPoints e
+// 1 sellPoints s
+// GET ('/sellPoints')
+exports.getAverageSellPoints = async (req, res) => {
+	let sellPoints = await getSellPoints();
+	if (sellPoints['1h'][20] === 0) {
+		let candleOHLC = await getCandleOHLC();
+		if (candleOHLC['1h'].length === 0) {
+			candleOHLC = await setCandleOHLC();
+		}
+		sellPoints = await setSellPoints(candleOHLC);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			sellPoints,
+		},
+	});
+};
+// 1  sellPoints e
 
 // 2 MA s
 // GET ('/movingAverages/:interval')
@@ -310,7 +364,39 @@ exports.getResistanceByInterval = async (req, res) => {
 		},
 	});
 };
-// 2 support e
+// 2 resistance e
+// 2 buyPoints s
+// GET ('/buyPoints/:interval')
+exports.getBuyPointsByInterval = async (req, res) => {
+	let interval = req.params.interval;
+	let buyPoints = await getIntervalBuyPoints(interval);
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			buyPoints,
+		},
+	});
+};
+// 2 buyPoints e
+// 2 sellPoints s
+// GET ('/buyPoints/:interval')
+exports.getSellPointsByInterval = async (req, res) => {
+	let interval = req.params.interval;
+	let sellPoints = await getIntervalSellPoints(interval);
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			sellPoints,
+		},
+	});
+};
+// 2 sellPoints e
 
 exports.checkId = (req, res, next, val) => {
 	// check the id of req.params.id

@@ -7,6 +7,8 @@ import highsReducer from '../features/highsAverage/highsSlice';
 import lowsReducer from '../features/lowsAverage/lowsSlice';
 import supportReducer from '../features/supportAverage/supportSlice';
 import resistanceReducer from '../features/resistanceAverage/resistanceSlice';
+import buyPointsReducer from '../features/buyPoints/buyPointsSlice';
+import sellPointsReducer from '../features/sellPoints/sellPointsSlice';
 
 /* import { applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension'; */
@@ -21,6 +23,8 @@ export const store = configureStore(
 			lows: lowsReducer,
 			support: supportReducer,
 			resistance: resistanceReducer,
+			buyPoints: buyPointsReducer,
+			sellPoints: sellPointsReducer,
 		},
 	},
 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

@@ -26,6 +26,7 @@ export const Navbar = () => {
 				<Link to="/bollingerBands">Bollinger Bands</Link>
 				<Link to="/highsAndLows">Highs & Lows</Link>
 				<Link to="/supportAndResistance">Support & Resistance</Link>
+				<Link to="/buyAndSellPoints">Buy & Sell Points</Link>
 			</Nav>
 		</aside>
 	);
