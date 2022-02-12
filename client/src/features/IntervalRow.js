@@ -13,7 +13,7 @@ const IntervalRow = ({ interval, selector }) => {
 		let data = Object.entries(item);
 		let isValid = false;
 		for (const [k, v] of data) {
-			isValid = v >= 0 ? true : false;
+			isValid = v !== null ? true : false;
 		}
 		if (isValid) {
 			data = data.filter((el) => !isNaN(el[1]));

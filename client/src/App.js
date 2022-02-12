@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 
@@ -14,6 +13,7 @@ import SupportTable from './features/supportAverage/SupportTable';
 import ResistanceTable from './features/resistanceAverage/ResistanceTable';
 import BuyPoints from './features/buyPoints/BuyPoints';
 import SellPoints from './features/sellPoints/SellPoints';
+import TradingPortfolio from './features/tradingPortfolio/TradingPortfolio';
 import './App.css';
 
 class App extends Component {
@@ -68,6 +68,15 @@ class App extends Component {
 									<>
 										<BuyPoints />
 										<SellPoints />
+									</>
+								)}
+							/>
+							<Route
+								exact
+								path="/tradingPortfolio"
+								render={() => (
+									<>
+										<TradingPortfolio />
 									</>
 								)}
 							/>

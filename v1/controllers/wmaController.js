@@ -1,3 +1,5 @@
+const calcBuyPoints = require('./buyPointsController').calcBuyPoints;
+const calcAvgBuyPoints = require('./buyPointsController').calcAvgBuyPoints;
 const weightedMa = {
 	'1h': { 20: 0, 50: 0, 100: 0, 200: 0 },
 	'2h': { 20: 0, 50: 0, 100: 0, 200: 0 },
@@ -39,7 +41,9 @@ exports.setWMA = async (candleOHLC) => {
 			sumWma += weightedMa[k][p];
 		}
 		weightedMa[k]['avg'] = sumWma / 4;
+		weightedMa[k]['buyPoints'] = await calcBuyPoints(candleOHLC[k], weightedMa[k]);
 	}
+	let avgBuyPoints = await calcAvgBuyPoints(weightedMa);
 	weightedMa['avg'] = {
 		20: sumPeriods[20] / 8,
 		50: sumPeriods[50] / 8,
@@ -51,6 +55,7 @@ exports.setWMA = async (candleOHLC) => {
 				sumPeriods[100] / 8 +
 				sumPeriods[200] / 8) /
 			4,
+		buyPoints: avgBuyPoints,
 	};
 
 	return weightedMa;

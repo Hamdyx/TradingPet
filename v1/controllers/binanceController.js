@@ -214,10 +214,18 @@ exports.getAverageBuyPoints = async (req, res) => {
 	let buyPoints = await getBuyPoints();
 	if (buyPoints['1h'][20] === 0) {
 		let candleOHLC = await getCandleOHLC();
+		let ma = await getMA();
+		let wma = await getWMA();
 		if (candleOHLC['1h'].length === 0) {
 			candleOHLC = await setCandleOHLC();
 		}
-		buyPoints = await setBuyPoints(candleOHLC);
+		if (ma['1h'][20] === 0) {
+			ma = await setMA(candleOHLC);
+		}
+		if (wma['1h'][20] === 0) {
+			wma = await setWMA(candleOHLC);
+		}
+		buyPoints = await setBuyPoints(candleOHLC, ma, wma);
 	}
 
 	res.status(200).json({

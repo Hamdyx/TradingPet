@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const binanceRouter = require('./v1/routes/binanceRoutes');
+const tradingRouter = require('./v1/routes/tradingRoutes');
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use((req, res, next) => {
 
 // Mounting Routers
 app.use('/api/v1/binance', binanceRouter);
+app.use('/api/v1/trading', tradingRouter);
 
 module.exports = app;

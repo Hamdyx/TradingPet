@@ -58,28 +58,55 @@ exports.getIntervalCandleOHLC = async (interval) => {
 	return candleOHLC[interval];
 };
 
-/* exports.getAllData = async (req, res) => {
-	// console.log('getAllData controller called');
-	let _candleOHLC = await setData();
+async function setIntervalData(symbol, interval, period) {
+	const _api = 'api/v3/klines';
+	let intervalToHours = 1;
+	if (interval[1] === 'd') {
+		intervalToHours = 24;
+	} else if (interval[1] === 'w') {
+		intervalToHours = 24 * 7;
+	} else {
+		intervalToHours = 1;
+	}
+	let timeMultiplier = parseInt(interval);
+	let endTime = new Date();
+	let startTime = new Date();
+	console.log(`timeMultiplier: ${timeMultiplier}`);
+	console.log(`intervalToHours: ${intervalToHours}`);
+	console.log(`period: ${period}`);
+	startTime.setHours(
+		startTime.getHours() - timeMultiplier * intervalToHours * period * 2
+	);
+	endTime = endTime.getTime();
+	startTime = startTime.getTime();
 
-	res.status(200).json({
-		status: 'success',
-		requestedAt: req.requestTime,
-		results: 'data.length',
-		data: {
-			candleOHLC: _candleOHLC,
-		},
-	});
-}; */
+	console.log(`startTime: ${startTime}`);
+	console.log(`endTime: ${endTime}`);
+	try {
+		const response = await axios.get(
+			`${binanceEndpoint}/${_api}?symbol=${symbol}&interval=${interval}&startTime=${startTime}&endTime=${endTime}`
+		);
+		// let arr = Array.from(response.data).reverse();
+		let arr = Array.from(response.data);
+		arr = arr.map((el) => {
+			return {
+				date: el[0],
+				open: el[1],
+				high: el[2],
+				low: el[3],
+				close: el[4],
+				volume: el[5],
+			};
+		});
 
-/* const getCandleOHLC = async (symbol = 'BTCUSDT', interval) => {
-	return candleOHLC[interval];
-}; */
+		return arr;
+	} catch (err) {
+		console.log(err);
+		return toString(err);
+	}
+}
 
-/* const candleOHLC = JSON.parse(
-	fs.readFileSync(`${__dirname}/../dev-data/data/tasks-simple.json`)
-); */
-
-/* const readCandleOHLC = (interval) => {
-	return JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/${interval}OHLC.json`));
-}; */
+exports.getDataByIntervalPeriod = async (symbol, interval, period) => {
+	let data = await setIntervalData(symbol, interval, period);
+	return data;
+};
