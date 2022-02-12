@@ -1,3 +1,8 @@
+// Chart Intervals:
+// m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+// 1m 3m 5m 15m 30m
+// 1h 2h 4h 6h 8h 12h
+// 1d 3d 1w 1M
 const fs = require('fs');
 const axios = require('axios');
 
@@ -110,3 +115,79 @@ exports.getDataByIntervalPeriod = async (symbol, interval, period) => {
 	let data = await setIntervalData(symbol, interval, period);
 	return data;
 };
+
+// DEV
+// read data from local files
+// if latest data is available
+//		fetch without sending get request to binance api
+//else: get data from binance api and append to local file
+
+const candles = {
+	'1h': [],
+	'2h': [],
+	'4h': [],
+	'6h': [],
+	'8h': [],
+	'12h': [],
+	'1d': [],
+	'1w': [],
+};
+
+/* const candles = JSON.parse(
+	fs.readFileSync(`${__dirname}/../dev-data/binance-${interval}Candles-data.json`)
+); */
+
+exports.getAllData = async (req, res) => {
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: 'data.length',
+		data: {
+			data: 'data',
+		},
+	});
+};
+
+exports.getDataByInterval = async (req, res) => {
+	console.log('getDataByInterval');
+	let { symbol, interval } = req.params;
+
+	let candles = await setIntervalData(symbol, interval, 5);
+	// let data = await setIntervalData('BTCUSDT', '1h', 5);
+	// return data;
+
+	res.status(200).json({
+		status: 'success',
+		requestedAt: req.requestTime,
+		results: candles.length,
+		data: {
+			candles,
+		},
+	});
+
+	console.log('respond rent');
+
+	// save data to local storage
+	console.log(`writing ${interval} binance data to binance-candles-data.json`);
+	let _data = Array.from(candles);
+	saveDataToLocal(_data, interval);
+	console.log('done writing binance data');
+	// save data to local storage
+};
+
+async function saveDataToLocal(data, interval) {
+	fs.writeFile(
+		`${__dirname}/../dev-data/binance-${interval}Candles-data.json`,
+		JSON.stringify(data, null, 4),
+		(err) => {
+			if (err) {
+				console.log('error writing binance data');
+				console.log(err);
+				console.log(toString(err));
+				return toString(err);
+			} else {
+				console.log('Writing data done successfuly');
+			}
+		}
+	);
+}

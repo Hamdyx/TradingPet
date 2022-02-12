@@ -5,7 +5,7 @@ const XLSX = require('xlsx');
 // const data = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/jan2022.json`));
 
 const TestXlsx = () => {
-	let workbook = XLSX.readFile(`${__dirname}/../../dev-data/perpetual-jan2022.xlsx`);
+	let workbook = XLSX.readFile(`${__dirname}/../../dev-data/perpetual-feb2022.xlsx`);
 	let sheet_name_list = workbook.SheetNames;
 	let data = [];
 	sheet_name_list.forEach((sh) => {
